@@ -34,7 +34,7 @@ const startWithUtil = async () => {
             './content/result-WFP.txt',
             `This is me trying to learn node JS with: ${second} keeping in midn of ${first}`
         )
-        //console.log(first, second);
+        console.log(first, second);
     } catch (error) {
         console.log(error);
     }
