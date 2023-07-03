@@ -1,47 +1,14 @@
-const { readFile, writeFile } = require('fs');
-const util = require('util');
-const readFilePromise = util.promisify(readFile);
-const writeFilePromise = util.promisify(writeFile);
+const { createReadStream } = require('fs');
 
+const stream = createReadStream('./content/big.txt', {
+    highWaterMark: 90000,
+    //encoding: 'utf8'
+    });
 
-const getText = (path) => {
-    return new Promise((resolve, reject) => {
-        readFile(path, 'utf8', (err, data) => {
-            if(err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        })
-    })
-}
+// default 64kb
+// last buffer - remainder
 
-const start = async () => {
-    try {
-        const first = await getText('./content/first.txt');
-        const second = await getText('./content/second.txt');
-        console.log(first, second);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const startWithUtil = async () => {
-    try {
-        const first = await readFilePromise('./content/result-WFP.txt', 'utf8');
-        const second = await readFilePromise('./content/second.txt', 'utf8');
-        await writeFilePromise(
-            './content/result-WFP.txt',
-            `This is me trying to learn node JS with: ${second} keeping in midn of ${first}`
-        )
-        //console.log(first, second);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-startWithUtil();
-
-// getText('./content/first.txt')
-//     .then((result) => console.log(result))
-//     .catch((err) => console.log(err))
+stream.on('data', (res) => {
+    console.log(res);
+});
+stream.on('error', (err) => console.log(err))
